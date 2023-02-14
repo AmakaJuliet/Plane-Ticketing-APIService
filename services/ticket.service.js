@@ -1,5 +1,6 @@
 const ticketModel = require("../models/ticket.model");
 const planeModel = require("../models/plane.model");
+const { NotFoundException } = require("../@helpers/errorHandlers");
 
 class TicketService {
  constructor() {}
@@ -47,7 +48,7 @@ class TicketService {
       return ticket;
 
     } catch (error) {
-      return error;
+      throw error;
     }
   }
 
@@ -56,7 +57,7 @@ class TicketService {
       const ticket = await ticketModel.findOne({ _id: ticket_id }).exec();
 
       if (!ticket) {
-        throw new Error("Ticket not found");
+        throw new NotFoundException("Ticket not found", 404);
       }
 
       const delete_ticket = await ticketModel.deleteOne({ _id: ticket_id}).exec();
@@ -64,7 +65,7 @@ class TicketService {
       return delete_ticket;
 
     } catch (error) {
-      return error;
+      throw error;
     }
   }
 
@@ -76,7 +77,7 @@ class TicketService {
       const ticket = await ticketModel.findOne({ _id: ticket_id }).exec();
 
       if (!ticket) {
-        throw new Error("Ticket not found");
+        throw new NotFoundException("Ticket not found", 404);
       }
       
       const plane = await planeModel.findOne({ plane_id: ticket.plane_id }).exec();
@@ -97,7 +98,7 @@ class TicketService {
       const ticket_update = await ticketModel.updateOne({ _id: ticket_id}, { class: ticket_class, price }).exec()
       return ticket_update;
     } catch (error) {
-      return error;
+      throw error;
     }
   }
 

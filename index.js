@@ -24,6 +24,23 @@ app.get(`/${api_version}`, (req, res, next) => {
 app.use(`/${api_version}/planes`, planeRouter);
 app.use(`/${api_version}/tickets`, ticketRouter);
 
+//error middleware
+
+app.use((error, req, res, next) => {
+  const statusCode = error.statusCode ? error.status.Code : 500;
+  let message = error.message;
+  if (statusCode == 500) {
+    message = "An error occurred on our server, we have been notified";
+  }
+
+  res.status(statusCode).json({
+    status: "error",
+    message: message,
+    error_code: statusCode,
+    data: null
+  });
+})
+
 const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => {

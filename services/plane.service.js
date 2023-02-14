@@ -1,3 +1,4 @@
+const { NotFoundException } = require("../@helpers/errorHandlers");
 const planeModel = require("../models/plane.model");
 
 class PlaneService {
@@ -22,7 +23,7 @@ class PlaneService {
      await plane.save();
      return plane;
    } catch (e) {
-     return e;
+     throw e;
    }
  }
 
@@ -69,7 +70,7 @@ class PlaneService {
 
       return schedule;
     } catch (e) {
-     return e;
+      throw e;
     }
   }
 
