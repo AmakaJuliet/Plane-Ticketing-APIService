@@ -5,6 +5,8 @@ const express = require("express");
 const connectDb = require("./@helpers/db");
 const ticketRouter = require("./routes/ticket.router");
 const planeRouter = require("./routes/plane.router");
+const { register }  = require("./controllers/auth.controller");
+const { verifyAuth } = require("./middlewares/basic_auth");
 
 const app = express();
 connectDb();
@@ -22,12 +24,13 @@ app.get(`/${api_version}`, (req, res, next) => {
 })
 
 app.use(`/${api_version}/planes`, planeRouter);
-app.use(`/${api_version}/tickets`, ticketRouter);
+app.use(`/${api_version}/tickets`, verifyAuth, ticketRouter);
+app.post(`/${api_version}/auth/signup`, register);
 
 //error middleware
 
 app.use((error, req, res, next) => {
-  const statusCode = error.statusCode ? error.status.Code : 500;
+  const statusCode = error.statusCode ? error.statusCode : 500;
   let message = error.message;
   if (statusCode == 500) {
     message = "An error occurred on our server, we have been notified";

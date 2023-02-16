@@ -7,8 +7,12 @@ class NotFoundException extends Error{
 }
 
 class ValidationException extends NotFoundException {};
+class AuthForbiddenException extends NotFoundException {};
+class InvalidOeExpiredAuthToken extends NotFoundException {};
 
 module.exports = {
   ValidationException,
-  NotFoundException
+  NotFoundException,
+  AuthForbiddenException,
+  InvalidOeExpiredAuthToken
 }
