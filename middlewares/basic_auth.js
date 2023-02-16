@@ -1,11 +1,11 @@
-const { InvalidOeExpiredAuthToken } = require("../@helpers/errorHandlers");
+const { InvalidOrExpiredAuthToken } = require("../@helpers/errorHandlers");
 const authModel = require("../models/auth.model");
 const bcrypt = require("bcryptjs")
 
 async function verifyAuth(req, res, next) {
     try{
       if (!req.headers.authorization) {
-        throw new InvalidOeExpiredAuthToken("auth token missing", 403);
+        throw new InvalidOrExpiredAuthToken("auth token missing", 403);
       }
 
       const token  = req.headers.authorization.split(" ")[1];
@@ -18,13 +18,13 @@ async function verifyAuth(req, res, next) {
       const auth = await authModel.findOne({ username: username.toLowerCase() }).exec();
 
       if (!auth) {
-        throw new InvalidOeExpiredAuthToken("access denied", 403);
+        throw new InvalidOrExpiredAuthToken("access denied", 403);
       }
 
       const isPassword = await bcrypt.compare(pass, auth.pwd);
 
       if (!isPassword) {
-        throw new InvalidOeExpiredAuthToken("invalid or expired creds", 403)
+        throw new InvalidOrExpiredAuthToken("invalid or expired creds", 403)
       }
 
       next();
